@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 
-
 /**
  * @author litianfu
  * @version 1.0
@@ -31,7 +30,7 @@ public class PaymentController {
         int result = paymentService.create(payment);
         log.info("****************结果是：" + result);
         if (result > 0) {
-            return new CommentResult(200, "操纵成功，服务器端口号为："+serverPort, result);
+            return new CommentResult(200, "操纵成功,服务器端口号为："+serverPort, result);
         } else {
             return new CommentResult(444, "操纵失败", null);
         }
@@ -43,7 +42,7 @@ public class PaymentController {
         log.info("****************结果是：" + payment);
         int i = 10;
         if (payment != null) {
-            return new CommentResult(200, "操纵成功，服务器端口号为："+serverPort, payment);
+            return new CommentResult(200, "操纵成功，服务器端口号为： "+serverPort, payment);
         } else {
             return new CommentResult(444, "操纵失败", null);
         }
