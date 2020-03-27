@@ -2,12 +2,19 @@ package com.tech4flag.springcloud.controller;
 
 import com.tech4flag.springcloud.entity.CommentResult;
 import com.tech4flag.springcloud.entity.Payment;
+import com.tech4flag.springcloud.lb.LoadBalancer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
+
+import javax.annotation.Resource;
+import java.net.URI;
+import java.util.List;
 
 /**
  * @author litianfu
@@ -29,16 +36,33 @@ public class OrderController {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private LoadBalancer loadBalancer;
+
+    @Autowired
+    private DiscoveryClient discoveryClient;
+
     @GetMapping(value = "/consumer/payment/create")
     public CommentResult<Payment> create(Payment payment) {
         log.info("*********进行插入操作*********");
         CommentResult commentResult = restTemplate.postForObject(PAYMENT_URL + "/payment/create", payment, CommentResult.class);
-        return  commentResult;
+        return commentResult;
     }
 
     @GetMapping(value = "/consumer/payment/get/{id}")
-    public CommentResult<Payment> getPayment(@PathVariable("id")Long id){
+    public CommentResult<Payment> getPayment(@PathVariable("id") Long id) {
         log.info("*********获取订单中*********");
-        return restTemplate.getForObject(PAYMENT_URL+"/payment/get/"+id,CommentResult.class);
+        return restTemplate.getForObject(PAYMENT_URL + "/payment/get/" + id, CommentResult.class);
+    }
+
+    @GetMapping(value = "/consumer/payment/lb")
+    public String getPaymentLB() {
+        List<ServiceInstance> instances = discoveryClient.getInstances("CLOUD-PAYMENT-SERVICE");
+        if (instances == null || instances.size() <= 0) {
+            return null;
+        }
+        ServiceInstance serviceInstance = loadBalancer.instances(instances);
+        URI uri = serviceInstance.getUri();
+        return restTemplate.getForObject(uri+"/payment/lb",String.class);
     }
 }
