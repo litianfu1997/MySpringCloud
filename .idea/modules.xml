@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/cloud-consumer-consul-order80/cloud-consumer-consul-order80.iml" filepath="$PROJECT_DIR$/cloud-consumer-consul-order80/cloud-consumer-consul-order80.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cloud-consumer-hystrix-dashboard9001/cloud-consumer-hystrix-dashboard9001.iml" filepath="$PROJECT_DIR$/cloud-consumer-hystrix-dashboard9001/cloud-consumer-hystrix-dashboard9001.iml" />
     </modules>
   </component>
 </project>
